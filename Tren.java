@@ -50,7 +50,7 @@ public class Tren{
 
     public void setTimerSpeed() {
         if(velocidad > 0){
-            delay = Math.max(1000 / velocidad, 100);
+            delay = Math.max(1000 / velocidad, 5);
             timer.setDelay(delay);
         }else {
             stopTimer();
@@ -77,6 +77,10 @@ public class Tren{
     public void aumentarVelocidad() {
         velocidad++;
         setTimerSpeed();
+        if (velocidad > 0 && timer.isRunning() == false) {
+            startTimer();
+            nextImage();
+        }
     }
 
     public void disminuirVelocidad() {

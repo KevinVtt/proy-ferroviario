@@ -8,7 +8,7 @@ public class ImageLoader {
     public ArrayList<BufferedImage> loadImage(String path) {
         ArrayList<BufferedImage> images = new ArrayList<>();
         try {
-            for (int i = 1 ; i <= 20; i++) {
+            for (int i = 200 ; i <= 300; i++) {
                 BufferedImage image = ImageIO.read(new File(path + "(" + i + ")" + ".png"));
                 images.add(image);
                
