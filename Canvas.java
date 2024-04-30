@@ -13,8 +13,13 @@ public class Canvas extends JPanel implements Runnable {
 
     public Canvas(int w, int h) {
         ImageLoader loader = new ImageLoader();
-        images = loader.loadImage("./resources/images/1 a 1664 de 9147/");
-        tren = new Tren("./resources/images/cabina/cabinatest.png",images);
+        images = loader.loadImage("./resources/images/recorrido/Recorrido Lugano - Villa Madero/");
+        
+        if (images.isEmpty()) {
+            System.out.println("No se han cargado las imágenes.");
+            System.exit(1);
+        }
+        tren = new Tren("./resources/images/cabina/cabinaRender3D.png","./resources/images/cabina/cabina2.png",images);
     
          // Agregar KeyListener para las teclas numéricas 1 y 2
          this.addKeyListener(new KeyListener() {
@@ -23,6 +28,7 @@ public class Canvas extends JPanel implements Runnable {
                 // Acelerar con la tecla numérica 1
                 if (e.getKeyCode() == KeyEvent.VK_NUMPAD1 || e.getKeyCode() == KeyEvent.VK_1) {
                     tren.aumentarVelocidad();
+                    tren.setAcelerando(true);
                 }
                 // Disminuir velocidad con la tecla numérica 2
                 else if (e.getKeyCode() == KeyEvent.VK_NUMPAD2 || e.getKeyCode() == KeyEvent.VK_2) {
@@ -31,7 +37,9 @@ public class Canvas extends JPanel implements Runnable {
             }
             @Override
             public void keyReleased(KeyEvent e) {
-                // Método no utilizado en este caso
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD1 || e.getKeyCode() == KeyEvent.VK_1) {
+                    tren.setAcelerando(false);
+                }
             }
 
             @Override
