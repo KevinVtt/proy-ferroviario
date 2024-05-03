@@ -26,18 +26,26 @@ public class Tren{
 
     private Dimension screenSize;
     private boolean acelerando=false;
-
+    private String pathRecorrido="./resources/images/recorrido/Recorrido Lugano - Villa Madero";
+    private boolean cargado=false;
     
-    public Tren(String cabina,String cabina2, ArrayList<BufferedImage> images) {
+    public Tren() {
+        ImageLoader loader = new ImageLoader();
+        images = loader.loadPath(pathRecorrido);
+        if (images.isEmpty()) {
+            System.out.println("No se han cargado las imágenes.");
+            System.exit(1);
+        }
+        cargado=true;
+       
         screenSize=Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {
-            this.cabina = ImageIO.read(new File(cabina));
-            this.cabina2 = ImageIO.read(new File(cabina2));
+            this.cabina = ImageIO.read(new File("./resources/images/cabina/cabinaRender3D.png"));
+            this.cabina2 = ImageIO.read(new File("./resources/images/cabina/cabina2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.images=images;
 
         timer = new Timer(delay, new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -67,6 +75,9 @@ public class Tren{
         }
     public void paint(Graphics g, int w, int h) {
         g.drawImage(images.get(currentImage), 0, 0, w, h, null);
+        g.setColor(Color.red); // Color del texto
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString("currentImg "+ currentImage,10,10);
         drawCabina(g,w,h);
         int textX=screenSize.width/10+200;
         int textY=screenSize.height/2+100;
@@ -119,5 +130,8 @@ public class Tren{
     }
     public void setAcelerando(boolean acelerando) {
         this.acelerando = acelerando;
+    }
+    public boolean recorridoCargado(){
+        return cargado;
     }
 }

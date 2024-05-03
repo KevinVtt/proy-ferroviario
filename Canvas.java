@@ -2,25 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Canvas extends JPanel implements Runnable {
-    private ArrayList<BufferedImage> images;
     private static final int TARGET_FPS = 30;
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
     private Tren tren;
 
     public Canvas(int w, int h) {
-        ImageLoader loader = new ImageLoader();
-        images = loader.loadImage("./resources/images/recorrido/Recorrido Lugano - Villa Madero/");
-        
-        if (images.isEmpty()) {
-            System.out.println("No se han cargado las imágenes.");
-            System.exit(1);
-        }
-        tren = new Tren("./resources/images/cabina/cabinaRender3D.png","./resources/images/cabina/cabina2.png",images);
-    
+        tren=new Tren();
          // Agregar KeyListener para las teclas numéricas 1 y 2
          this.addKeyListener(new KeyListener() {
             @Override
@@ -53,7 +42,9 @@ public class Canvas extends JPanel implements Runnable {
 
     public void paint(Graphics g) {
         super.paint(g);
-        tren.paint(g, getWidth(), getHeight());
+        if(tren.recorridoCargado()){
+            tren.paint(g, getWidth(), getHeight());
+        }
         renderFPS(g);
     }
 
