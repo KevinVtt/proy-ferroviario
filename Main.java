@@ -16,7 +16,7 @@ public class Main extends JFrame {
         setLocationRelativeTo(null);
         
         ct=new ClienteTren();
-        panel=new Canvas(width,height);
+        panel=new Canvas(width,height,ct);
         
         add(panel);
        

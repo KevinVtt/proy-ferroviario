@@ -7,9 +7,13 @@ public class Canvas extends JPanel implements Runnable {
     private static final int TARGET_FPS = 30;
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
     private Tren tren;
+    private ClienteTren ct;
+    int curretBobina=0;
 
-    public Canvas(int w, int h) {
+
+    public Canvas(int w, int h,ClienteTren ct) {
         tren=new Tren();
+        this.ct=ct;
          // Agregar KeyListener para las teclas numéricas 1 y 2
          this.addKeyListener(new KeyListener() {
             @Override
@@ -54,10 +58,20 @@ public class Canvas extends JPanel implements Runnable {
         g.drawString("FPS: " + TARGET_FPS, 100, 20);
     }
 
+    private void verificarBobina(){
+        int aux=tren.getNombreBonina();
+       
+        if(curretBobina != aux){
+            curretBobina=aux;
+            ct.cambioBobina(String.valueOf(curretBobina));
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
             long startTime = System.currentTimeMillis();
+            verificarBobina();
             repaint();
             long currentTime = System.currentTimeMillis() - startTime;
             

@@ -21,6 +21,7 @@ public class Tren{
     private BufferedImage cabina,cabina2;
     private ArrayList<BufferedImage> images;
     private int currentImage = 0;
+    private int currentImageFolder=0;
     private Timer timer;
     private int delay = 1000;
 
@@ -28,16 +29,22 @@ public class Tren{
     private boolean acelerando=false;
     private String pathRecorrido="./resources/images/recorrido/Recorrido Lugano - Villa Madero";
     private boolean cargado=false;
-    
+    private ImageLoader loader;
+    private int nombreBobina=0;
+    int[] imagesFolder;
+    int currentFolder=0;
+
     public Tren() {
-        ImageLoader loader = new ImageLoader();
+        this.loader = new ImageLoader();
         images = loader.loadPath(pathRecorrido);
         if (images.isEmpty()) {
             System.out.println("No se han cargado las imágenes.");
             System.exit(1);
         }
         cargado=true;
-       
+       if(cargado){
+        imagesFolder=loader.getCantImagenesCarpeta();
+       }
         screenSize=Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {
@@ -90,10 +97,18 @@ public class Tren{
     public void nextImage() {
         
             currentImage++;
+            
             if (currentImage >= images.size()) {
                 currentImage = 0;
             }
-        
+           
+            if(currentImageFolder > imagesFolder[currentFolder]){
+                nombreBobina++;
+                currentFolder++;
+                currentImageFolder=0;
+            }
+           
+            currentImageFolder++;
     }
 
     public void aumentarVelocidad() {
@@ -133,5 +148,11 @@ public class Tren{
     }
     public boolean recorridoCargado(){
         return cargado;
+    }
+    public ImageLoader getImageLoader(){
+        return loader;
+    }
+    public int getNombreBonina(){
+       return nombreBobina;
     }
 }

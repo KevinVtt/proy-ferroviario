@@ -21,9 +21,12 @@ public class ClienteTren implements Runnable{
             sc = new Socket(HOST, PUERTO);
             in = new DataInputStream(sc.getInputStream());
             out = new DataOutputStream(sc.getOutputStream());
-
-            while (!sc.isClosed()) {
+            if(sc.isConnected()){
                 out.writeUTF("tren");
+            }
+            
+            while (!sc.isClosed()) {
+               // out.writeUTF("tren");
 
                 String mensaje = in.readUTF();
                 System.out.println("Respuesta del servidor: " + mensaje);
@@ -50,4 +53,15 @@ public class ClienteTren implements Runnable{
             ex.printStackTrace();
         }
     }
+    
+    public void cambioBobina(String bobina){
+        System.out.println("cambiamos de bobina a la numero "+bobina);
+        try {
+            out.writeUTF("bobina-"+bobina);
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+        }
+    }
+    
 }

@@ -27,10 +27,10 @@ public class ImageLoader {
         
         try {
            for(int i=1;i<=carpetasTotales;i++){
-            System.out.println(cantImagenesCarpeta[i-1]);
+            //System.out.println(cantImagenesCarpeta[i-1]);
             for(int j=1;j<=cantImagenesCarpeta[i-1];j++){
 
-                System.out.println("\n"+path+"/"+i+"/"+"("+j+").png");
+                //System.out.println("\n"+path+"/"+i+"/"+"("+j+").png");
 
                 BufferedImage image= ImageIO.read(new File(path+"/"+i+"/"+"("+j+").png"));
                 images.add(image);
@@ -44,6 +44,13 @@ public class ImageLoader {
             ex.printStackTrace();
         }
         return images;
+    }
+
+    public int getCarpetasTotales(){
+        return carpetasTotales;
+    }
+    public int[] getCantImagenesCarpeta(){
+        return cantImagenesCarpeta;
     }
     
 }
