@@ -1,3 +1,4 @@
+package com.mycompany.simuladorclientetren;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -8,11 +9,10 @@ public class Canvas extends JPanel implements Runnable {
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
     private Tren tren;
     private ClienteTren ct;
-    int curretBobina=0;
+    int currentBobina=0;
 
-
-    public Canvas(int w, int h,ClienteTren ct) {
-        tren=new Tren();
+    public Canvas(int w, int h,ClienteTren ct,String pathRecorrido) {
+        tren=new Tren(pathRecorrido);
         this.ct=ct;
          // Agregar KeyListener para las teclas numéricas 1 y 2
          this.addKeyListener(new KeyListener() {
@@ -43,12 +43,13 @@ public class Canvas extends JPanel implements Runnable {
         setFocusable(true);
         requestFocusInWindow();
     }
-
+    
     public void paint(Graphics g) {
         super.paint(g);
         if(tren.recorridoCargado()){
             tren.paint(g, getWidth(), getHeight());
         }
+        
         renderFPS(g);
     }
 
@@ -59,11 +60,10 @@ public class Canvas extends JPanel implements Runnable {
     }
 
     private void verificarBobina(){
-        int aux=tren.getNombreBonina();
-       
-        if(curretBobina != aux){
-            curretBobina=aux;
-            ct.cambioBobina(String.valueOf(curretBobina));
+        int aux=tren.getNombreBobina();
+        if(currentBobina != aux){
+            currentBobina=aux;
+            ct.cambioBobina(tren.getRecorrido(),String.valueOf(currentBobina),tren.getNSerie());
         }
     }
 

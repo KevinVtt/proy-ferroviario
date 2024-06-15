@@ -1,3 +1,4 @@
+package com.mycompany.simuladorclientetren;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -54,11 +55,14 @@ public class ClienteTren implements Runnable {
         }
     }
 
-    public void cambioBobina(String bobina) {
-        System.out.println("cambiamos de bobina a la numero " + bobina);
+    public void cambioBobina(String recorrido,String identificadorBobina,String numTren) {
+        System.out.println("recorrido --> "+recorrido);
+        System.out.println("cambiamos de bobina a la numero --> " + identificadorBobina);
+        System.out.println("modelo del tren --> "+numTren);
+//recorrido-identificador-NumTren <--- formato de mensaje
         try {
             if (sc != null && !sc.isClosed()) {
-                out.writeUTF("bobina-" + bobina);
+                out.writeUTF("recorrido-"+ recorrido + "/identificador-" + identificadorBobina + "/tren-"+numTren);
             }
         } catch (IOException e) {
 
