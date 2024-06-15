@@ -1,1 +1,15 @@
-resources
+# Java-specific
+*.class
+*.jar
+*.war
+*.ear
+*.log
+target/
+
+
+# NetBeans
+nbproject/
+build/
+
+# Ignorar toda la carpeta src/main/resources
+/src/main/resources/
