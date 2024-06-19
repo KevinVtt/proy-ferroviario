@@ -9,11 +9,14 @@ public class Canvas extends JPanel implements Runnable {
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
     private Tren tren;
     private ClienteTren ct;
-    int currentBobina=0;
+    int currentBobina = 0;
+    private Cronometro c;
 
-    public Canvas(int w, int h,ClienteTren ct,String pathRecorrido) {
-        tren=new Tren(pathRecorrido);
-        this.ct=ct;
+    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido) {
+        tren = new Tren(pathRecorrido);
+        c = new Cronometro();
+        c.iniciar();
+        this.ct = ct;
          // Agregar KeyListener para las teclas numéricas 1 y 2
          this.addKeyListener(new KeyListener() {
             @Override
@@ -46,11 +49,12 @@ public class Canvas extends JPanel implements Runnable {
     
     public void paint(Graphics g) {
         super.paint(g);
-        if(tren.recorridoCargado()){
+        if (tren.recorridoCargado()) {
             tren.paint(g, getWidth(), getHeight());
         }
         
         renderFPS(g);
+        mostrarUI(g);
     }
 
     private void renderFPS(Graphics g) {
@@ -58,12 +62,45 @@ public class Canvas extends JPanel implements Runnable {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
         g.drawString("FPS: " + TARGET_FPS, 100, 20);
     }
+    
+    private void mostrarUI(Graphics g) {
+        mostrarVelocidad(g);
+        mostrarVelocidadMaxima(g);
+        mostrarProximaEstacion(g);
+        mostrarCronometro(g);
+    }
+ 
+    private void mostrarVelocidad(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.drawString("Velocidad actual: " + tren.velocidad, (getWidth() - 240), 20);
+    }
+    
+    private void mostrarVelocidadMaxima(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.drawString("Velocidad máxima: 90", (getWidth() - 240), 35);
+    }
+    
+    private void mostrarProximaEstacion(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.drawString("Próxima estación: " + tren.getProximaEstacion(), (getWidth() - 240), 50);
+    }
+    
+    private void mostrarCronometro(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 12));
+        g.drawString("Tiempo:", (getWidth() - 240), 70);
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString(c.getTiempo(), (getWidth() - 240), 90);
+    }
 
     private void verificarBobina(){
-        int aux=tren.getNombreBobina();
-        if(currentBobina != aux){
-            currentBobina=aux;
-            ct.cambioBobina(tren.getRecorrido(),String.valueOf(currentBobina),tren.getNSerie());
+        int aux = tren.getNombreBobina();
+        if (currentBobina != aux) {
+            currentBobina = aux;
+            ct.cambioBobina(tren.getRecorrido(), String.valueOf(currentBobina), tren.getNSerie());
         }
     }
 
