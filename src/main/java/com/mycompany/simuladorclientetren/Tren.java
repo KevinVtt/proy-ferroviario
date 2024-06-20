@@ -18,7 +18,9 @@ import javax.swing.Timer;
 
 public class Tren {
 
-    int velocidad;
+    private int velocidad;
+
+   
     private String nSerie;
     private String nombreRecorrido;
     private BufferedImage cabina, cabina2;
@@ -169,7 +171,7 @@ public class Tren {
     public boolean recorridoCargado() {
         return cargado;
     }
-    
+    //arreglar
     public String getProximaEstacion() {
         int posGuion = nombreRecorrido.indexOf("-");
         String estacion = (nombreRecorrido.substring(posGuion + 2));
@@ -189,5 +191,8 @@ public class Tren {
     }
     public String getRecorrido(){
         return nombreRecorrido;
+    }
+     public int getVelocidad() {
+        return velocidad;
     }
 }

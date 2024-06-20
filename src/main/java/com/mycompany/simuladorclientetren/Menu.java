@@ -55,8 +55,11 @@ public void initListener() {
     play.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            main.initJuego("D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
-        }
+            main.initJuego("C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero");
+            
+        }  
+//yamil        
+//D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica
     });
     flor.addActionListener(new ActionListener() {
         @Override
