@@ -10,10 +10,12 @@ public class Canvas extends JPanel implements Runnable {
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
     private Tren tren;
     private ClienteTren ct;
-    int currentBobina = 0;
+    int currentBobinaAux = 0;
     private Cronometro c;
-
-    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido) {
+    private String[] bobinas;
+    
+    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido,String[] bobinas) {
+        this.bobinas=bobinas;
         tren = new Tren(pathRecorrido);
         c = new Cronometro(tren.getVelocidad(), w, tren.getProximaEstacion());
         c.iniciar();
@@ -65,9 +67,10 @@ public class Canvas extends JPanel implements Runnable {
     }
     private void verificarBobina(){
         int aux = tren.getNombreBobina();
-        if (currentBobina != aux) {
-            currentBobina = aux;
-            ct.cambioBobina(tren.getRecorrido(), String.valueOf(currentBobina), tren.getNSerie());
+        if (currentBobinaAux != aux) {
+            currentBobinaAux = aux;
+           String currentBobina =this.bobinas[currentBobinaAux-1];
+            ct.cambioBobina(tren.getRecorrido(), currentBobina, tren.getNSerie());
         }
     }
 

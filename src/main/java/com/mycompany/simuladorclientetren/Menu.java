@@ -19,52 +19,58 @@ public class Menu extends JPanel {
     BufferedImage background;
 
     Main main;
+    ClienteTren ct;
 
-    public Menu(int w, int h, Main main) {
-    this.w = w;
-    this.h = h;
-    this.main = main;
-    play = new JButton("Lugano - Villa Madero");
-    flor = new JButton("A.Korn-a-guernica");
+    public Menu(int w, int h, Main main, ClienteTren ct) {
+        this.w = w;
+        this.h = h;
+        this.main = main;
+        this.ct = ct;
+        play = new JButton("constitucion-ezeiza");
+        flor = new JButton("constitucion-korn");
 
-    try {
-        background = ImageIO.read(new File("./src/main/resources/images/menu/background.png"));
-    } catch (IOException ex) {
-        ex.printStackTrace(); // Manejo de errores en caso de que no se pueda cargar la imagen
+        try {
+            background = ImageIO.read(new File("./src/main/resources/images/menu/background.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace(); // Manejo de errores en caso de que no se pueda cargar la imagen
+        }
+        this.setBounds(0, 0, this.w, this.h);
+
+        //para poder posicionar manualmente los componentes
+        setLayout(null);
+
+        add(play);
+        add(flor);
+        play.setBounds(20, 20, 200, 50);
+        flor.setBounds(20, 80, 200, 50);
+
+        initListener();
     }
-    this.setBounds(0, 0, this.w, this.h);
 
-    //para poder posicionar manualmente los componentes
-    setLayout(null);
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(background, 0, 0, w, h, this);
+    }
 
-    add(play);
-    add(flor);
-    play.setBounds(20, 20, 200, 50); 
-    flor.setBounds(20, 80, 200, 50); 
-
-    initListener();
-}
-
-@Override
-protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    g.drawImage(background, 0, 0, w, h, this);
-}
-
-public void initListener() {
-    play.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            main.initJuego("C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero");
-            
-        }  
+    public void initListener() {
+        play.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String texto = play.getText();
+                System.out.println(texto);
+                ct.consultarRecorrido("menu/"+texto);
+            }
+        });
 //yamil        
 //D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica
-    });
-    flor.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            main.initJuego("D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
-        }
-    });
-}}
+
+        flor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               String texto = play.getText();
+               System.out.println(texto);
+               ct.consultarRecorrido("menu/"+texto); }
+        });
+    }
+}

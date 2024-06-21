@@ -17,9 +17,9 @@ public class Main extends JFrame {
         setSize(width, height);
         setLocationRelativeTo(null);
         
-        ct=new ClienteTren();
+        ct=new ClienteTren(this);
         //panel=new Canvas(width,height,ct);
-        menu=new Menu(width,height,this);
+        menu=new Menu(width,height,this,ct);
         //add(panel);
         add(menu);
        
@@ -53,9 +53,9 @@ public class Main extends JFrame {
             new Main();
        
     }
-
-    void initJuego(String pathRecorrido) {
-        panel=new Canvas(width,height,ct,pathRecorrido);
+//Respuesta del servidor: Bobinas del recorrido constitucion-ezeiza: aux1, aux2, PT7, PT8, 233T, 223AT, 219AT
+    void initJuego(String[] bobinas,String pathRecorrido) {
+        panel=new Canvas(width,height,ct,pathRecorrido,bobinas);
         this.add(panel);
         this.remove(menu);
         revalidate();
