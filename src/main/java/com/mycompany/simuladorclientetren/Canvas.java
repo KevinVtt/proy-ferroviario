@@ -71,7 +71,7 @@ public class Canvas extends JPanel implements Runnable {
         int aux = tren.getNombreBobina();
         if (currentBobinaAux != aux) {
             currentBobinaAux = aux;
-           String currentBobina =this.bobinas[currentBobinaAux-1];
+           String currentBobina =this.bobinas[currentBobinaAux];
             ct.cambioBobina(tren.getRecorrido(), currentBobina, tren.getNSerie());
         }
     }
