@@ -189,6 +189,9 @@ public class Tren {
     public String getNSerie() {
         return nSerie;
     }
+    public void setNSerie(String nSerie){
+        this.nSerie=nSerie;
+    }
     public String getRecorrido(){
         return nombreRecorrido;
     }

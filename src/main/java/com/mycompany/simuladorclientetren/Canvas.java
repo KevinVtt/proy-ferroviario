@@ -14,9 +14,11 @@ public class Canvas extends JPanel implements Runnable {
     private Cronometro c;
     private String[] bobinas;
     
-    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido,String[] bobinas) {
-        this.bobinas=bobinas;
+    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido,String[] bobinas,String nSerie) {
+        this.bobinas=bobinas; 
         tren = new Tren(pathRecorrido);
+        tren.setNSerie(nSerie);
+        
         c = new Cronometro(tren.getVelocidad(), w, tren.getProximaEstacion());
         c.iniciar();
         this.ct = ct;

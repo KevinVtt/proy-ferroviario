@@ -54,8 +54,8 @@ public class Main extends JFrame {
        
     }
 //Respuesta del servidor: Bobinas del recorrido constitucion-ezeiza: aux1, aux2, PT7, PT8, 233T, 223AT, 219AT
-    void initJuego(String[] bobinas,String pathRecorrido) {
-        panel=new Canvas(width,height,ct,pathRecorrido,bobinas);
+    void initJuego(String tren,String[] bobinas,String pathRecorrido) {
+        panel=new Canvas(width,height,ct,pathRecorrido,bobinas,tren);
         this.add(panel);
         this.remove(menu);
         revalidate();

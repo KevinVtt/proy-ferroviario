@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+
 public class ClienteTren implements Runnable {
 
     final String HOST = "localhost";
@@ -33,10 +34,9 @@ public class ClienteTren implements Runnable {
 
                 String mensaje = in.readUTF();
                 System.out.println("Respuesta del servidor: " + mensaje);
-                if(mensaje.contains("Bobinas del recorrido")){
-                     procesarRespuesta(mensaje);
+                if (mensaje.contains("Bobinas del recorrido")) {
+                    procesarRespuesta(mensaje);
                 }
-               
 
             }
         } catch (SocketException se) {
@@ -78,8 +78,11 @@ public class ClienteTren implements Runnable {
     }
 
     public void procesarRespuesta(String mensaje) {
-     
-        //Respuesta del servidor: Bobinas del recorrido constitucion-ezeiza: aux1, aux2, PT7, PT8, 233T, 223AT, 219AT
+        //esta info no la estoy guardando.. posible data class 
+
+//Respuesta del servidor: /tren diesel-45/Bobinas del recorrido constitucion-ezeiza: aux1,aux2,PT7,PT8,233T,223AT,219AT
+        String nSerie = mensaje.split("/")[1].split(" ")[1];
+        System.out.println("numero serie: " + nSerie);
         String bobinasPart = mensaje.split(":")[1].trim();
         // Dividir las bobinas en un array
         String[] bobinas = bobinasPart.split(",");
@@ -89,9 +92,9 @@ public class ClienteTren implements Runnable {
 
         }
         if (mensaje.contains("constitucion-ezeiza")) {
-            main.initJuego(bobinas, "C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero");
+            main.initJuego(nSerie, bobinas, "C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero");
         } else if (mensaje.contains("constitucion-korn")) {
-            main.initJuego(bobinas, "D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
+            main.initJuego(nSerie, bobinas, "D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
         }
     }
 
