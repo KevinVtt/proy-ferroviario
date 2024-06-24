@@ -92,7 +92,7 @@ public class ClienteTren implements Runnable {
 
         }
         if (mensaje.contains("constitucion-ezeiza")) {
-            main.initJuego(nSerie, bobinas, "C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero");
+            main.initJuego(nSerie, bobinas, "C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero2");
         } else if (mensaje.contains("constitucion-korn")) {
             main.initJuego(nSerie, bobinas, "D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
         }
