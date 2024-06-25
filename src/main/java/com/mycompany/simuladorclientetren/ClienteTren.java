@@ -2,9 +2,11 @@ package com.mycompany.simuladorclientetren;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Properties;
 
 public class ClienteTren implements Runnable {
 
@@ -15,8 +17,12 @@ public class ClienteTren implements Runnable {
     Socket sc;
     Main main;
 
+    Properties properties;
+
     public ClienteTren(Main main) {
         this.main = main;
+        leerConfig();
+
     }
 
     @Override
@@ -92,9 +98,9 @@ public class ClienteTren implements Runnable {
 
         }
         if (mensaje.contains("constitucion-ezeiza")) {
-            main.initJuego(nSerie, bobinas, "C:/Users/sebas/Documents/recorrido/Recorrido Lugano - Villa Madero2");
+            main.initJuego(nSerie, bobinas, properties.getProperty("ruta.recorrido1"));
         } else if (mensaje.contains("constitucion-korn")) {
-            main.initJuego(nSerie, bobinas, "D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica");
+            main.initJuego(nSerie, bobinas, properties.getProperty("ruta.recorrido1"));
         }
     }
 
@@ -109,4 +115,15 @@ public class ClienteTren implements Runnable {
         }
     }
 
+    public void leerConfig() {
+        this.properties = new Properties();
+
+        try {
+            FileInputStream fis= new FileInputStream("./src/main/resources/config.properties");
+            properties.load(fis);
+            fis.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
