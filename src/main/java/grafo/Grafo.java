@@ -14,37 +14,8 @@ public class Grafo {
     public Grafo() {
         secciones = new ArrayList<>();
         conexiones = new HashMap<>();
-        
-        Bobina bobina1 = new Bobina("ab-2");
-        Bobina bobina2 = new Bobina("c5");
-        Bobina bobina3 = new Bobina("v4-2");
-        Bobina bobina4 = new Bobina("z");
-        
-        Semaforo semaforo1 = new Semaforo();
-        Semaforo semaforo2 = new Semaforo();
-        Semaforo semaforo3 = new Semaforo();
-        Semaforo semaforo4 = new Semaforo();
-        
-        Seccion seccion1 = new Seccion(bobina1,  semaforo1);
-        Seccion seccion2 = new Seccion(bobina2, semaforo2);
-        Seccion seccion3 = new Seccion(bobina3, semaforo3);
-        Seccion seccion4 = new Seccion(bobina4, semaforo4);
-        
-        agregarSeccion(seccion1);
-        agregarSeccion(seccion2);
-        agregarSeccion(seccion3);
-        //se agrega lo que quieras
-        //agregarSeccion(seccion4);
-        
-        setSiguiente(seccion1, seccion2);
-        setSiguiente(seccion2, seccion3);
-        //modo loop
-        setSiguiente(seccion3, seccion1);
-        
-        imprimiVecinos(seccion1);
-        imprimiVecinos(seccion2);
-        imprimiVecinos(seccion3);
-        
+        //cargaRecorridoGuernica();
+        cargaRecorridoLugano();
     }
 
     public void agregarSeccion(Seccion seccion) {
@@ -88,16 +59,19 @@ public class Grafo {
     }
 
     public void imprimiTodos() {
-        for(Seccion s: secciones){
+        for (Seccion s : secciones) {
             imprimiVecinos(s);
         }
     }
-    public List<Seccion> getAllSeccion(){
+
+    public List<Seccion> getAllSeccion() {
         return secciones;
     }
-    public Seccion getFirstSeccion(){
+
+    public Seccion getFirstSeccion() {
         return secciones.get(0);
     }
+
     public Seccion getSeccion(String name) {
         for (int i = 0; i < secciones.size(); i++) {
             Seccion current = secciones.get(i);
@@ -107,6 +81,91 @@ public class Grafo {
         }
         return null;
     }
+
+    public void cargaRecorridoGuernica() {
+        Bobina bobina1 = new Bobina("a1");
+        Bobina bobina2 = new Bobina("b2");
+        Bobina bobina3 = new Bobina("c3");
+        Bobina bobina4 = new Bobina("d4");
+        Bobina bobina5 = new Bobina("e5");
+        Bobina bobina6 = new Bobina("f6");
+        Bobina bobina7 = new Bobina("g7");
+        Bobina bobina8 = new Bobina("h8");
+        Bobina bobina9 = new Bobina("i9");
+
+        Semaforo semaforo1 = new Semaforo();
+        Semaforo semaforo2 = new Semaforo();
+        Semaforo semaforo3 = new Semaforo();
+        Semaforo semaforo4 = new Semaforo();
+        Semaforo semaforo5 = new Semaforo();
+        Semaforo semaforo6 = new Semaforo();
+        Semaforo semaforo7 = new Semaforo();
+        Semaforo semaforo8 = new Semaforo();
+        Semaforo semaforo9 = new Semaforo();
+
+        Seccion seccion1 = new Seccion(bobina1, semaforo1);
+        Seccion seccion2 = new Seccion(bobina2, semaforo2);
+        Seccion seccion3 = new Seccion(bobina3, semaforo3);
+        Seccion seccion4 = new Seccion(bobina4, semaforo4);
+        Seccion seccion5 = new Seccion(bobina5, semaforo5);
+        Seccion seccion6 = new Seccion(bobina6, semaforo6);
+        Seccion seccion7 = new Seccion(bobina7, semaforo7);
+        Seccion seccion8 = new Seccion(bobina8, semaforo8);
+        Seccion seccion9 = new Seccion(bobina9, semaforo9);
+
+        agregarSeccion(seccion1);
+        agregarSeccion(seccion2);
+        agregarSeccion(seccion3);
+        agregarSeccion(seccion4);
+        agregarSeccion(seccion5);
+        agregarSeccion(seccion6);
+        agregarSeccion(seccion7);
+        agregarSeccion(seccion8);
+        agregarSeccion(seccion9);
+        //se agrega lo que quieras
+        //agregarSeccion(seccion4);
+
+        setSiguiente(seccion1, seccion2);
+        setSiguiente(seccion2, seccion3);
+        //modo loop
+        setSiguiente(seccion3, seccion4);
+        setSiguiente(seccion4, seccion5);
+        setSiguiente(seccion5, seccion6);
+        setSiguiente(seccion6, seccion7);
+        setSiguiente(seccion7, seccion8);
+        setSiguiente(seccion8, seccion9);
+
+    }
+
+    public void cargaRecorridoLugano() {
+        //Bobina bobina1 = new Bobina("ab-2");
+        Bobina bobina2 = new Bobina("c5");
+        Bobina bobina3 = new Bobina("v4-2");
+        Bobina bobina4 = new Bobina("z");
+
+       // Semaforo semaforo1 = new Semaforo();
+        Semaforo semaforo2 = new Semaforo();
+        Semaforo semaforo3 = new Semaforo();
+        Semaforo semaforo4 = new Semaforo();
+
+        //Seccion seccion1 = new Seccion(bobina1, semaforo1);
+        Seccion seccion2 = new Seccion(bobina2, semaforo2);
+        Seccion seccion3 = new Seccion(bobina3, semaforo3);
+        Seccion seccion4 = new Seccion(bobina4, semaforo4);
+
+        //agregarSeccion(seccion1);
+        agregarSeccion(seccion2);
+        agregarSeccion(seccion3);
+        //se agrega lo que quieras
+        //agregarSeccion(seccion4);
+
+        //setSiguiente(seccion1, seccion2);
+        setSiguiente(seccion2, seccion3);
+        //modo loop
+       // setSiguiente(seccion3, seccion1);
+
+        //imprimiVecinos(seccion1);
+        imprimiVecinos(seccion2);
+        imprimiVecinos(seccion3);
+    }
 }
-
-

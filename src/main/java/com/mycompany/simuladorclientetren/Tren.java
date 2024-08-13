@@ -7,61 +7,50 @@ import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.Dimension;
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.FileInputStream;
-
-import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.Timer;
 
 public class Tren {
-//hacer un singleton con properties ARREGLAR
-    Properties properties;
+    private static final int INITIAL_DELAY = 1000;
     
+    private Properties properties;
     private int velocidad;
+
+    
     private String nSerie;
     private String nombreRecorrido;
+
+    private int nombreBobina;
+
+    
     private BufferedImage cabina, cabina2;
-    private ArrayList<BufferedImage> images;
-    private int currentImage = 0;
-    private int currentImageFolder = 0;
+    private BufferedImage currentImage;
     private Timer timer;
-    private int delay = 1000;
+    private int delay = INITIAL_DELAY;
 
     private Dimension screenSize;
     private boolean acelerando = false;
-    //./src/main/resources/images/recorrido/Recorrido Lugano - Villa Madero
 
     private String pathRecorrido;
     private boolean cargado = false;
     private ImageLoader loader;
-    private int nombreBobina = 0;
-    int[] imagesFolder;
-    int currentFolder = 0;
 
     public Tren(String path) {
-           leerConfig();
-
+        leerConfig();
+        nombreBobina=0;
         nSerie = "thoshiba234";
-        int ultimoSeparador=path.lastIndexOf("/");
-        nombreRecorrido=path.substring(ultimoSeparador+1);//+1 por la barrita
-        
-        //System.out.println(nombreRecorrido);
+        int ultimoSeparador = path.lastIndexOf("/");
+        nombreRecorrido = path.substring(ultimoSeparador + 1);
+        nombreBobina = 0;
         pathRecorrido = path;
         this.loader = new ImageLoader();
-        images = loader.loadPath(pathRecorrido);
-        if (images.isEmpty()) {
-            System.out.println("No se han cargado las imágenes.");
-            System.exit(1);
-        }
-        cargado = true;
-        if (cargado) {
-            imagesFolder = loader.getCantImagenesCarpeta();
-        }
+        loader.loadPath(pathRecorrido);
+
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {
@@ -80,14 +69,12 @@ public class Tren {
         });
 
         startTimer();
-
     }
 
     public void startTimer() {
         timer.start();
     }
 
-    // Método para detener el timer
     public void stopTimer() {
         timer.stop();
     }
@@ -99,50 +86,37 @@ public class Tren {
         } else {
             stopTimer();
         }
-
     }
 
     public void paint(Graphics g, int w, int h) {
-        g.drawImage(images.get(currentImage), 0, 0, w, h, null);
-        g.setColor(Color.red); // Color del texto
+        if (currentImage != null) {
+            g.drawImage(currentImage, 0, 0, w, h, null);
+        }
+        g.setColor(Color.red);
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("currentImg " + currentImage, 10, 10);
         drawCabina(g, w, h);
         int textX = screenSize.width / 10 + 200;
         int textY = screenSize.height / 2 + 100;
-        g.setColor(Color.GREEN); // Color del texto
-        g.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente y tamaño del texto
+        g.setColor(Color.GREEN);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("     " + velocidad, textX, textY);
         drawVelocity(g, textX, textY);
     }
 
     public void nextImage() {
-    currentImage++;
-
-    if (currentImage >= images.size()) {
-        currentImage = 0;
-    }
-
-    if (currentFolder < imagesFolder.length && currentImageFolder >= imagesFolder[currentFolder]) {
-        nombreBobina++;
-        currentFolder++;
-        currentImageFolder = 0;
-
-        // Verifica que currentFolder no exceda el tamaño de imagesFolder
-        if (currentFolder >= imagesFolder.length) {
-            currentFolder = 0; // O maneja el caso de forma adecuada según el diseño de tu aplicación
+        currentImage = loader.getNextImage();
+        if (currentImage == null) {
+            System.out.println("No hay más imágenes para mostrar.");
         }
     }
-
-    currentImageFolder++;
-}
 
     public void aumentarVelocidad() {
         if (velocidad < 90) {
             velocidad++;
             setTimerSpeed();
         }
-        if (velocidad > 0 && timer.isRunning() == false) {
+        if (velocidad > 0 && !timer.isRunning()) {
             startTimer();
             nextImage();
         }
@@ -178,44 +152,57 @@ public class Tren {
     public boolean recorridoCargado() {
         return cargado;
     }
-    
-     public void leerConfig() {
+
+    public void leerConfig() {
         this.properties = new Properties();
 
         try {
-            FileInputStream fis= new FileInputStream("./src/main/resources/config.properties");
+            FileInputStream fis = new FileInputStream("./src/main/resources/config.properties");
             properties.load(fis);
             fis.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    
-    //arreglar
+
     public String getProximaEstacion() {
         int posGuion = nombreRecorrido.indexOf("-");
-        String estacion = (nombreRecorrido.substring(posGuion + 2));
-        return estacion;
+        return nombreRecorrido.substring(posGuion + 2);
     }
 
     public ImageLoader getImageLoader() {
         return loader;
     }
 
+    public String getNSerie() {
+        return nSerie;
+    }
+
+    public void setNSerie(String nSerie) {
+        this.nSerie = nSerie;
+    }
+    public int getVelocidad() {
+        return velocidad;
+    }
+
+    public void setVelocidad(int velocidad) {
+        this.velocidad = velocidad;
+    }
+     public String getRecorrido() {
+        return nombreRecorrido;
+    }
+
+    public void setRecorrido(String nombreRecorrido) {
+        this.nombreRecorrido = nombreRecorrido;
+    }
     public int getNombreBobina() {
         return nombreBobina;
     }
 
-    public String getNSerie() {
-        return nSerie;
+    public void setNombreBobina(int nombreBobina) {
+        this.nombreBobina = nombreBobina;
     }
-    public void setNSerie(String nSerie){
-        this.nSerie=nSerie;
-    }
-    public String getRecorrido(){
-        return nombreRecorrido;
-    }
-     public int getVelocidad() {
-        return velocidad;
+    public BufferedImage getCurrentImage() {
+        return currentImage;
     }
 }

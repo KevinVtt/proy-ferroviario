@@ -60,14 +60,23 @@ public class Canvas extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (tren.recorridoCargado()) {
-            tren.paint(g, getWidth(), getHeight());
-        }
-        ui.paint(g);
-        renderFPS(g);
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    System.out.println("Painting component...");
+    if (tren.recorridoCargado()) {
+        tren.paint(g, getWidth(), getHeight());
     }
+    ui.paint(g);
+
+    if (tren.getCurrentImage() != null) {
+        g.drawImage(tren.getCurrentImage(), 0, 0, getWidth(), getHeight(), null);
+    } else {
+        System.out.println("No current image to draw.");
+    }
+
+    renderFPS(g);
+}
+
 
     private void renderFPS(Graphics g) {
         g.setColor(Color.WHITE);
