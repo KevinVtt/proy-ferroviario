@@ -16,7 +16,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(width, height);
         setLocationRelativeTo(null);
-        
+       
         ct=new ClienteTren(this);
         //panel=new Canvas(width,height,ct);
         menu=new Menu(width,height,this,ct);

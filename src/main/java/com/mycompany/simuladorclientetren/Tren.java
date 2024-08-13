@@ -12,15 +12,17 @@ import java.awt.event.ActionListener;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.FileInputStream;
 
 import java.util.ArrayList;
+import java.util.Properties;
 import javax.swing.Timer;
 
 public class Tren {
-
+//hacer un singleton con properties ARREGLAR
+    Properties properties;
+    
     private int velocidad;
-
-   
     private String nSerie;
     private String nombreRecorrido;
     private BufferedImage cabina, cabina2;
@@ -42,6 +44,7 @@ public class Tren {
     int currentFolder = 0;
 
     public Tren(String path) {
+           leerConfig();
 
         nSerie = "thoshiba234";
         int ultimoSeparador=path.lastIndexOf("/");
@@ -62,8 +65,8 @@ public class Tren {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {
-            this.cabina = ImageIO.read(new File("./src/main/resources/images/cabina/cabinaRender3D.png"));
-            this.cabina2 = ImageIO.read(new File("./src/main/resources/images/cabina/cabina2.png"));
+            this.cabina = ImageIO.read(new File(properties.getProperty("cabinaDefault")));
+            this.cabina2 = ImageIO.read(new File(properties.getProperty("cabinaAvanza")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,21 +117,25 @@ public class Tren {
     }
 
     public void nextImage() {
+    currentImage++;
 
-        currentImage++;
-
-        if (currentImage >= images.size()) {
-            currentImage = 0;
-        }
-
-        if (currentImageFolder > imagesFolder[currentFolder]) {
-            nombreBobina++;
-            currentFolder++;
-            currentImageFolder = 0;
-        }
-
-        currentImageFolder++;
+    if (currentImage >= images.size()) {
+        currentImage = 0;
     }
+
+    if (currentFolder < imagesFolder.length && currentImageFolder >= imagesFolder[currentFolder]) {
+        nombreBobina++;
+        currentFolder++;
+        currentImageFolder = 0;
+
+        // Verifica que currentFolder no exceda el tamaño de imagesFolder
+        if (currentFolder >= imagesFolder.length) {
+            currentFolder = 0; // O maneja el caso de forma adecuada según el diseño de tu aplicación
+        }
+    }
+
+    currentImageFolder++;
+}
 
     public void aumentarVelocidad() {
         if (velocidad < 90) {
@@ -171,6 +178,19 @@ public class Tren {
     public boolean recorridoCargado() {
         return cargado;
     }
+    
+     public void leerConfig() {
+        this.properties = new Properties();
+
+        try {
+            FileInputStream fis= new FileInputStream("./src/main/resources/config.properties");
+            properties.load(fis);
+            fis.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     //arreglar
     public String getProximaEstacion() {
         int posGuion = nombreRecorrido.indexOf("-");
