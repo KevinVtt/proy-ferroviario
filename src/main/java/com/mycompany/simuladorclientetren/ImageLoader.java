@@ -61,6 +61,7 @@ public class ImageLoader {
         }
 
         currentSeccion = recorridoIterator.next();
+        
         File folder = carpetaPorSeccion.get(currentSeccion.getNombre());
         if (folder != null) {
             File[] imagenesEnCarpeta = folder.listFiles((dir, name) -> name.endsWith(".png"));

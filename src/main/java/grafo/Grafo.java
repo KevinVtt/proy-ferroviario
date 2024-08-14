@@ -144,7 +144,9 @@ public class Grafo {
         Bobina bobina4 = new Bobina("z");
 
         Semaforo semaforo1 = new Semaforo();
+        
         Semaforo semaforo2 = new Semaforo();
+        semaforo2.setEstado(false);
         Semaforo semaforo3 = new Semaforo();
         Semaforo semaforo4 = new Semaforo();
 
@@ -157,12 +159,12 @@ public class Grafo {
         agregarSeccion(seccion2);
         agregarSeccion(seccion3);
         //se agrega lo que quieras
-        //agregarSeccion(seccion4);
+        agregarSeccion(seccion4);
 
         setSiguiente(seccion1, seccion2);
         setSiguiente(seccion2, seccion3);
         //modo loop si haces esto se crashea por memoria
-       // setSiguiente(seccion3, seccion1);
+         setSiguiente(seccion2, seccion4);
 
         imprimiVecinos(seccion1);
         imprimiVecinos(seccion2);
@@ -170,25 +172,26 @@ public class Grafo {
     }
     
     public List<Seccion> getRecorridoGrafo(Seccion current) {
-        // Obtener el recorrido de las secciones basado en el grafo
-        List<Seccion> secciones = getAllSeccion();
-        List<Seccion> recorrido = new ArrayList<>();
+    List<Seccion> recorrido = new ArrayList<>();
+    
+    while (current != null) {
+        recorrido.add(current);
+        List<Seccion> vecinos = obtenerVecinos(current);
         
-        if (!secciones.isEmpty()) {
-            while (current != null) {
-                
-                recorrido.add(current);
-                List<Seccion> vecinos = obtenerVecinos(current);
-                
-                if (!vecinos.isEmpty()) {
-                    // Avanzar al siguiente vecino en este caso el primero
-                    //(se puede ajustar si se desea segun estado de semaforo)
-                    current = vecinos.get(0); 
-                } else {
-                    break;
-                }
+        if (!vecinos.isEmpty()) {
+            // Utiliza el estado del semáforo para determinar el siguiente vecino
+            if (current.getSemaforo().getEstado() && vecinos.size() > 0) {
+                current = vecinos.get(0); // Asumimos que el primer vecino es el correcto cuando el semáforo está en verde
+            } else if (!current.getSemaforo().getEstado() && vecinos.size() > 1) {
+                current = vecinos.get(1); // Asumimos que el segundo vecino es el correcto cuando el semáforo está en rojo
+            } else {
+                current = null; // No hay vecinos adecuados
             }
+        } else {
+            break;
         }
-        return recorrido;
     }
+    return recorrido;
+}
+
 }

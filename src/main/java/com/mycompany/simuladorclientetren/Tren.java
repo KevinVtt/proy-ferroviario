@@ -64,6 +64,7 @@ public class Tren {
         try {
             this.cabina = ImageIO.read(new File(properties.getProperty("cabinaDefault")));
             this.cabina2 = ImageIO.read(new File(properties.getProperty("cabinaAvanza")));
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,12 +143,20 @@ public class Tren {
     }
 
     public void drawCabina(Graphics g, int w, int h) {
-        if (acelerando) {
+    if (acelerando) {
+        if (cabina2 != null) {
             g.drawImage(cabina2, 0, 0, w, h, null);
         } else {
+            System.out.println("cabina2 es null");
+        }
+    } else {
+        if (cabina != null) {
             g.drawImage(cabina, 0, 0, w, h, null);
+        } else {
+            System.out.println("cabina es null");
         }
     }
+}
 
     public boolean isAcelerando() {
         return acelerando;

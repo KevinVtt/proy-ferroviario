@@ -9,7 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -21,12 +23,13 @@ public class Menu extends JPanel {
     JButton play;
     JButton flor;
     BufferedImage background;
-
+    Properties properties;
     Main main;
     ClienteTren ct;
     Font font = new Font("Arial", Font.BOLD, 16);
 
     public Menu(int w, int h, Main main, ClienteTren ct) {
+        leerConfig();
         this.w = w;
         this.h = h;
         this.main = main;
@@ -48,7 +51,7 @@ public class Menu extends JPanel {
         flor.setContentAreaFilled(true);
 
         try {
-            background = ImageIO.read(new File("./src/main/resources/images/menu/background.png"));
+            background = ImageIO.read(new File(properties.getProperty("cabinaDefault")));
         } catch (IOException ex) {
             ex.printStackTrace(); // Manejo de errores en caso de que no se pueda cargar la imagen
         }
@@ -79,11 +82,6 @@ public class Menu extends JPanel {
         listenerAction(flor);
         listenerMouse(flor);
     }
-//yamil        
-//D:/Proyectos/simuladorFerroviario2D/src/main/resources/images/recorrido/A. Korn - Guernica
-
-    
-
     public void listenerAction(JButton boton) {
         boton.addActionListener(new ActionListener() {
             @Override
@@ -122,5 +120,16 @@ public class Menu extends JPanel {
                 boton.setForeground(Color.WHITE); // Restaurar el color original
             }
         });
+    }
+     public void leerConfig() {
+        this.properties = new Properties();
+
+        try {
+            FileInputStream fis = new FileInputStream("./src/main/resources/config.properties");
+            properties.load(fis);
+            fis.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
