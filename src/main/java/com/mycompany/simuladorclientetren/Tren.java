@@ -41,6 +41,7 @@ public class Tren {
     private ImageLoader loader;
 
     public Tren(String path) {
+        //para la imagenes de la cabina por ahora
         leerConfig();
         nombreBobina=0;
         nSerie = "thoshiba234";
@@ -50,7 +51,14 @@ public class Tren {
         pathRecorrido = path;
         this.loader = new ImageLoader();
         loader.loadPath(pathRecorrido);
-
+        //cargamos la primer imagen para que no se vea vacio(peligrooo)
+        try{
+            currentImage = loader.getNextImage();
+        }catch(Exception e){
+            e.printStackTrace();
+            currentImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+        }
+        
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {

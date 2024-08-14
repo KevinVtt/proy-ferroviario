@@ -25,18 +25,18 @@ public class Grafo {
 
     public void setSiguiente(Seccion s1, Seccion s2) {
         if (secciones.contains(s1) && secciones.contains(s2)) {
-
+        //dirigido
             conexiones.get(s1.getNombre()).add(s2);
 
         } else {
             throw new IllegalArgumentException("al menos una de las secciones no esta presente en el grafo");
         }
     }
-
+//devuelve la lista de conexiones de la seccion
     public List<Seccion> obtenerVecinos(Seccion s) {
         return conexiones.get(s.getNombre());
     }
-
+//a modo de debug no se utiliza
     public void imprimiVecinos(Seccion s) {
         List<Seccion> vecinosSeccion = obtenerVecinos(s);
         System.out.println("Vecinos de " + s.getNombre() + ":");
@@ -138,34 +138,57 @@ public class Grafo {
     }
 
     public void cargaRecorridoLugano() {
-        //Bobina bobina1 = new Bobina("ab-2");
-        Bobina bobina2 = new Bobina("c5");
-        Bobina bobina3 = new Bobina("v4-2");
+        Bobina bobina1 = new Bobina("ab-2");
+        Bobina bobina3 = new Bobina("c5");
+        Bobina bobina2 = new Bobina("v4-2");
         Bobina bobina4 = new Bobina("z");
 
-       // Semaforo semaforo1 = new Semaforo();
+        Semaforo semaforo1 = new Semaforo();
         Semaforo semaforo2 = new Semaforo();
         Semaforo semaforo3 = new Semaforo();
         Semaforo semaforo4 = new Semaforo();
 
-        //Seccion seccion1 = new Seccion(bobina1, semaforo1);
+        Seccion seccion1 = new Seccion(bobina1, semaforo1);
         Seccion seccion2 = new Seccion(bobina2, semaforo2);
         Seccion seccion3 = new Seccion(bobina3, semaforo3);
         Seccion seccion4 = new Seccion(bobina4, semaforo4);
 
-        //agregarSeccion(seccion1);
+        agregarSeccion(seccion1);
         agregarSeccion(seccion2);
         agregarSeccion(seccion3);
         //se agrega lo que quieras
         //agregarSeccion(seccion4);
 
-        //setSiguiente(seccion1, seccion2);
+        setSiguiente(seccion1, seccion2);
         setSiguiente(seccion2, seccion3);
-        //modo loop
+        //modo loop si haces esto se crashea por memoria
        // setSiguiente(seccion3, seccion1);
 
-        //imprimiVecinos(seccion1);
+        imprimiVecinos(seccion1);
         imprimiVecinos(seccion2);
         imprimiVecinos(seccion3);
+    }
+    
+    public List<Seccion> getRecorridoGrafo(Seccion current) {
+        // Obtener el recorrido de las secciones basado en el grafo
+        List<Seccion> secciones = getAllSeccion();
+        List<Seccion> recorrido = new ArrayList<>();
+        
+        if (!secciones.isEmpty()) {
+            while (current != null) {
+                
+                recorrido.add(current);
+                List<Seccion> vecinos = obtenerVecinos(current);
+                
+                if (!vecinos.isEmpty()) {
+                    // Avanzar al siguiente vecino en este caso el primero
+                    //(se puede ajustar si se desea segun estado de semaforo)
+                    current = vecinos.get(0); 
+                } else {
+                    break;
+                }
+            }
+        }
+        return recorrido;
     }
 }
