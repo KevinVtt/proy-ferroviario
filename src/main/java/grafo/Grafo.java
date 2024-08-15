@@ -7,15 +7,21 @@ import java.util.Map;
 
 public class Grafo {
 
+    private static Grafo instancia;
     private List<Seccion> secciones;
     //utiliza list porque pueden ser varias conexiones
     private Map<String, List<Seccion>> conexiones;
 
-    public Grafo() {
+    private Grafo() {
         secciones = new ArrayList<>();
         conexiones = new HashMap<>();
-        //cargaRecorridoGuernica();
-        cargaRecorridoLugano();
+    }
+    
+    public static Grafo getInstancia(){
+        if(instancia == null){
+            return instancia = new Grafo();
+        }
+        return instancia;
     }
 
     public void agregarSeccion(Seccion seccion) {
@@ -82,95 +88,6 @@ public class Grafo {
         return null;
     }
 
-    public void cargaRecorridoGuernica() {
-        Bobina bobina1 = new Bobina("a1");
-        Bobina bobina2 = new Bobina("b2");
-        Bobina bobina3 = new Bobina("c3");
-        Bobina bobina4 = new Bobina("d4");
-        Bobina bobina5 = new Bobina("e5");
-        Bobina bobina6 = new Bobina("f6");
-        Bobina bobina7 = new Bobina("g7");
-        Bobina bobina8 = new Bobina("h8");
-        Bobina bobina9 = new Bobina("i9");
-
-        Semaforo semaforo1 = new Semaforo();
-        Semaforo semaforo2 = new Semaforo();
-        Semaforo semaforo3 = new Semaforo();
-        Semaforo semaforo4 = new Semaforo();
-        Semaforo semaforo5 = new Semaforo();
-        Semaforo semaforo6 = new Semaforo();
-        Semaforo semaforo7 = new Semaforo();
-        Semaforo semaforo8 = new Semaforo();
-        Semaforo semaforo9 = new Semaforo();
-
-        Seccion seccion1 = new Seccion(bobina1, semaforo1);
-        Seccion seccion2 = new Seccion(bobina2, semaforo2);
-        Seccion seccion3 = new Seccion(bobina3, semaforo3);
-        Seccion seccion4 = new Seccion(bobina4, semaforo4);
-        Seccion seccion5 = new Seccion(bobina5, semaforo5);
-        Seccion seccion6 = new Seccion(bobina6, semaforo6);
-        Seccion seccion7 = new Seccion(bobina7, semaforo7);
-        Seccion seccion8 = new Seccion(bobina8, semaforo8);
-        Seccion seccion9 = new Seccion(bobina9, semaforo9);
-
-        agregarSeccion(seccion1);
-        agregarSeccion(seccion2);
-        agregarSeccion(seccion3);
-        agregarSeccion(seccion4);
-        agregarSeccion(seccion5);
-        agregarSeccion(seccion6);
-        agregarSeccion(seccion7);
-        agregarSeccion(seccion8);
-        agregarSeccion(seccion9);
-        //se agrega lo que quieras
-        //agregarSeccion(seccion4);
-
-        setSiguiente(seccion1, seccion2);
-        setSiguiente(seccion2, seccion3);
-        //modo loop
-        setSiguiente(seccion3, seccion4);
-        setSiguiente(seccion4, seccion5);
-        setSiguiente(seccion5, seccion6);
-        setSiguiente(seccion6, seccion7);
-        setSiguiente(seccion7, seccion8);
-        setSiguiente(seccion8, seccion9);
-
-    }
-
-    public void cargaRecorridoLugano() {
-        Bobina bobina1 = new Bobina("ab-2");
-        Bobina bobina3 = new Bobina("c5");
-        Bobina bobina2 = new Bobina("v4-2");
-        Bobina bobina4 = new Bobina("z");
-
-        Semaforo semaforo1 = new Semaforo();
-        
-        Semaforo semaforo2 = new Semaforo();
-        semaforo2.setEstado(false);
-        Semaforo semaforo3 = new Semaforo();
-        Semaforo semaforo4 = new Semaforo();
-
-        Seccion seccion1 = new Seccion(bobina1, semaforo1);
-        Seccion seccion2 = new Seccion(bobina2, semaforo2);
-        Seccion seccion3 = new Seccion(bobina3, semaforo3);
-        Seccion seccion4 = new Seccion(bobina4, semaforo4);
-
-        agregarSeccion(seccion1);
-        agregarSeccion(seccion2);
-        agregarSeccion(seccion3);
-        //se agrega lo que quieras
-        agregarSeccion(seccion4);
-
-        setSiguiente(seccion1, seccion2);
-        setSiguiente(seccion2, seccion3);
-        //modo loop si haces esto se crashea por memoria
-         setSiguiente(seccion2, seccion4);
-
-        imprimiVecinos(seccion1);
-        imprimiVecinos(seccion2);
-        imprimiVecinos(seccion3);
-    }
-    
     public List<Seccion> getRecorridoGrafo(Seccion current) {
     List<Seccion> recorrido = new ArrayList<>();
     
@@ -194,4 +111,22 @@ public class Grafo {
     return recorrido;
 }
 
+    
+    public void inicializarRecorrido(String[] bobinas){
+      
+        for(String bob : bobinas){
+            Bobina bobina = new Bobina(bob);
+            Semaforo semaforo=new Semaforo();
+            //forzar el cambio de via
+           //semaforo.setEstado(false);
+            Seccion seccion = new Seccion(bobina, semaforo);
+            agregarSeccion(seccion);
+        }
+        //suponiendo que me llegan 3 bobinas
+        //si es desde la bd tengo que tener una lista de relaciones entre registros
+        //foraneas entre la misma tabla para saber como conectarlas
+        setSiguiente(secciones.get(0),secciones.get(1));
+        setSiguiente(secciones.get(0),secciones.get(2));
+        setSiguiente(secciones.get(1),secciones.get(2));
+    }
 }

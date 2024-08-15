@@ -45,8 +45,13 @@ public class ClienteTren implements Runnable {
                 }
 
             }
+            
+            
         } catch (SocketException se) {
             System.out.println("Socket cerrado");
+            iniciarSinConexion();
+            
+             
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -108,13 +113,21 @@ public class ClienteTren implements Runnable {
         try {
             if (sc != null && !sc.isClosed()) {
                 out.writeUTF(texto);
+               
             }
         } catch (IOException e) {
 
             e.printStackTrace();
         }
     }
-
+    
+    public void iniciarSinConexion(){
+        String[] bobinasPrueba={"PT8","aux1","aux2","PT7"};
+        String nSeriePrueba="tren sin conexcion";
+        main.initJuego(nSeriePrueba, bobinasPrueba, properties.getProperty("ruta.recorrido1"));
+            
+    }
+ 
     public void leerConfig() {
         this.properties = new Properties();
 

@@ -25,7 +25,7 @@ public class ImageLoader {
     private Map<String, File> carpetaPorSeccion;
 
     public ImageLoader() {
-        mapaGrafo = new Grafo();
+        mapaGrafo = Grafo.getInstancia();
         imagenesPorCarpeta = new HashMap<>();
         IMAGE_QUEUE = new LinkedBlockingQueue<>();
         Cargado = false;
