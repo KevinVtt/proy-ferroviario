@@ -1,13 +1,15 @@
 package com.mycompany.simuladorclientetren;
 
 import grafo.Grafo;
+import grafo.Seccion;
+import grafo.Semaforo;
 import ui.Ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Canvas extends JPanel implements Runnable {
+public class Canvas extends JPanel implements MediadorCanvas, Runnable {
 
     private static final int TARGET_FPS = 30;
     private static final long FRAME_TIME = 1000 / TARGET_FPS;
@@ -20,7 +22,7 @@ public class Canvas extends JPanel implements Runnable {
 
     public Canvas(int w, int h, ClienteTren ct, String pathRecorrido, String[] bobinas, String nSerie) {
         this.bobinas = bobinas;
-        grafo=Grafo.getInstancia();
+        grafo = Grafo.getInstancia();
         grafo.inicializarRecorrido(bobinas);
         tren = new Tren(pathRecorrido);
         tren.setNSerie(nSerie);
@@ -87,12 +89,39 @@ public class Canvas extends JPanel implements Runnable {
             ct.cambioBobina(tren.getRecorrido(), currentBobina, tren.getNSerie());
         }
     }
-    
+
+    @Override
+    public void actualizarSeccion(Seccion seccion) {
+        //avisar a la ui y demas
+        if (ui != null) {
+            ui.actualizaSeccion(seccion);
+        }
+
+    }
+
+    @Override
+    public void actualizarSemaforo(Semaforo semaforo) {
+        //avisar a la ui y demas
+        if (ui != null) {
+            ui.actualizaSemaforo(semaforo);
+        }
+    }
+
+    private void actualizarDatosTren() {
+        tren.actualizaSemaforo();
+        tren.actualizaCurrentSeccion();
+        actualizarSemaforo(tren.getSemaforo());
+        actualizarSeccion(tren.getCurrentSeccion());
+    }
+
     @Override
     public void run() {
         while (true) {
             long startTime = System.currentTimeMillis();
+            //updates------------------------
             verificarBobina();
+            actualizarDatosTren();
+            //--------------------------------
             repaint();
             long currentTime = System.currentTimeMillis() - startTime;
 
@@ -105,4 +134,5 @@ public class Canvas extends JPanel implements Runnable {
             }
         }
     }
+
 }

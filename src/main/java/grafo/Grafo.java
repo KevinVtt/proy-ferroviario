@@ -125,7 +125,14 @@ public class Grafo {
         //suponiendo que me llegan 3 bobinas
         //si es desde la bd tengo que tener una lista de relaciones entre registros
         //foraneas entre la misma tabla para saber como conectarlas
+        //---------------------------------------
+        /*
+            HAY QUE CREAR LOS REGISTROS EN LA TABLA BOBINAS YA SEA
+            CON UN SIGUIENTE , SIGUIENTE2 Y ANTERIOR
+        */
+        //----------------------------------
         setSiguiente(secciones.get(0),secciones.get(1));
+        secciones.get(0).getSemaforo().setEstado(true);
         setSiguiente(secciones.get(0),secciones.get(2));
         setSiguiente(secciones.get(1),secciones.get(2));
     }

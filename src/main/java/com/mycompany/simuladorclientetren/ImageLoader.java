@@ -2,6 +2,7 @@ package com.mycompany.simuladorclientetren;
 
 import grafo.Grafo;
 import grafo.Seccion;
+import grafo.Semaforo;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,19 +12,20 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ImageLoader {
+public class ImageLoader{
+
     private final int CACHE_SIZE = 10; // Número de imágenes a cargar por vez
 
     private final BlockingQueue<BufferedImage> IMAGE_QUEUE; // Cola para manejar imágenes
     private Iterator<Seccion> recorridoIterator;
     private Queue<File> currentFolderImages;
     private Seccion currentSeccion;
+    private Semaforo currentSemaforo;
     private boolean Cargado;
     //grafo generico a futuro sera una interfaz
     private Grafo mapaGrafo;
     private Map<String, Integer> imagenesPorCarpeta;
     private Map<String, File> carpetaPorSeccion;
-
     public ImageLoader() {
         mapaGrafo = Grafo.getInstancia();
         imagenesPorCarpeta = new HashMap<>();
@@ -38,12 +40,12 @@ public class ImageLoader {
 
         if (subDirectorios != null) {
             //por default le pasamos la primer seccion
-            
+
             List<Seccion> seccionesOrdenadas = mapaGrafo.getRecorridoGrafo(mapaGrafo.getFirstSeccion());
-            
+
             for (File dir : subDirectorios) {
                 if (seccionesOrdenadas.stream().anyMatch(s -> s.getNombre().equals(dir.getName()))) {
-                    
+
                     carpetaPorSeccion.put(dir.getName(), dir);
                 }
             }
@@ -60,8 +62,8 @@ public class ImageLoader {
             return;
         }
 
-        currentSeccion = recorridoIterator.next();
-        
+        setCurrentSeccion(recorridoIterator.next());
+
         File folder = carpetaPorSeccion.get(currentSeccion.getNombre());
         if (folder != null) {
             File[] imagenesEnCarpeta = folder.listFiles((dir, name) -> name.endsWith(".png"));
@@ -121,5 +123,24 @@ public class ImageLoader {
             counts[i++] = count;
         }
         return counts;
+    }
+
+    private void setCurrentSeccion(Seccion currentSeccion) {
+        this.currentSeccion = currentSeccion;
+        setCurrentSemaforo(this.currentSeccion);
+        System.out.println("cambio de carpeta a -->" + currentSeccion.getNombre());
+       
+    }
+
+    public Seccion getCurrentSeccion() {
+        return this.currentSeccion;
+    }
+
+    private void setCurrentSemaforo(Seccion currentSeccion){
+        this.currentSemaforo=currentSeccion.getSemaforo();
+        System.out.println("estado del semaforo -->" + currentSemaforo.getEstado()); 
+    }
+    public Semaforo getCurrentSemaforo() {
+        return this.currentSemaforo;
     }
 }

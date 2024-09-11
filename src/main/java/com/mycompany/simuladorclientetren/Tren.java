@@ -1,5 +1,7 @@
 package com.mycompany.simuladorclientetren;
 
+import grafo.Seccion;
+import grafo.Semaforo;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,18 +18,17 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class Tren {
+
     private static final int INITIAL_DELAY = 1000;
-    
+
     private Properties properties;
     private int velocidad;
 
-    
     private String nSerie;
     private String nombreRecorrido;
 
     private int nombreBobina;
 
-    
     private BufferedImage cabina, cabina2;
     private BufferedImage currentImage;
     private Timer timer;
@@ -40,10 +41,13 @@ public class Tren {
     private boolean cargado = false;
     private ImageLoader loader;
 
+    private Seccion currentSeccion;
+    private Semaforo semaforo;
+
     public Tren(String path) {
         //para la imagenes de la cabina por ahora
         leerConfig();
-        nombreBobina=0;
+        nombreBobina = 0;
         nSerie = "thoshiba234";
         int ultimoSeparador = path.lastIndexOf("/");
         nombreRecorrido = path.substring(ultimoSeparador + 1);
@@ -52,19 +56,19 @@ public class Tren {
         this.loader = new ImageLoader();
         loader.loadPath(pathRecorrido);
         //cargamos la primer imagen para que no se vea vacio(peligrooo)
-        try{
+        try {
             currentImage = loader.getNextImage();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             currentImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         }
-        
+
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         velocidad = 0;
         try {
             this.cabina = ImageIO.read(new File(properties.getProperty("cabinaDefault")));
             this.cabina2 = ImageIO.read(new File(properties.getProperty("cabinaAvanza")));
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,20 +147,20 @@ public class Tren {
     }
 
     public void drawCabina(Graphics g, int w, int h) {
-    if (acelerando) {
-        if (cabina2 != null) {
-            g.drawImage(cabina2, 0, 0, w, h, null);
+        if (acelerando) {
+            if (cabina2 != null) {
+                g.drawImage(cabina2, 0, 0, w, h, null);
+            } else {
+                System.out.println("cabina2 es null");
+            }
         } else {
-            System.out.println("cabina2 es null");
-        }
-    } else {
-        if (cabina != null) {
-            g.drawImage(cabina, 0, 0, w, h, null);
-        } else {
-            System.out.println("cabina es null");
+            if (cabina != null) {
+                g.drawImage(cabina, 0, 0, w, h, null);
+            } else {
+                System.out.println("cabina es null");
+            }
         }
     }
-}
 
     public boolean isAcelerando() {
         return acelerando;
@@ -198,6 +202,7 @@ public class Tren {
     public void setNSerie(String nSerie) {
         this.nSerie = nSerie;
     }
+
     public int getVelocidad() {
         return velocidad;
     }
@@ -205,13 +210,15 @@ public class Tren {
     public void setVelocidad(int velocidad) {
         this.velocidad = velocidad;
     }
-     public String getRecorrido() {
+
+    public String getRecorrido() {
         return nombreRecorrido;
     }
 
     public void setRecorrido(String nombreRecorrido) {
         this.nombreRecorrido = nombreRecorrido;
     }
+
     public int getNombreBobina() {
         return nombreBobina;
     }
@@ -219,7 +226,33 @@ public class Tren {
     public void setNombreBobina(int nombreBobina) {
         this.nombreBobina = nombreBobina;
     }
+
     public BufferedImage getCurrentImage() {
         return currentImage;
     }
+
+    public Seccion getCurrentSeccion() {
+        return currentSeccion;
+    }
+    private void setCurrentSeccion(Seccion seccion){
+        this.currentSeccion=seccion;
+    }
+     public Semaforo getSemaforo() {
+        return semaforo;
+    }
+    private void setSemaforo(Semaforo semaforo){
+        this.semaforo=semaforo;
+    }
+    public void actualizaSemaforo(){
+        setSemaforo(loader.getCurrentSemaforo());
+    }
+    public void actualizaCurrentSeccion(){
+        setCurrentSeccion(loader.getCurrentSeccion());
+    }
+
+    //cambiar a tren la logica de deteccion de los semaforos utilizando a canvas
+    //como mediador asi reducir el acoplamiento y
+    //eliminar la instancia de canvas en tren y imageLoader
+    
+
 }
