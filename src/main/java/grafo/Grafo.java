@@ -16,9 +16,9 @@ public class Grafo {
         secciones = new ArrayList<>();
         conexiones = new HashMap<>();
     }
-    
-    public static Grafo getInstancia(){
-        if(instancia == null){
+
+    public static Grafo getInstancia() {
+        if (instancia == null) {
             return instancia = new Grafo();
         }
         return instancia;
@@ -31,7 +31,7 @@ public class Grafo {
 
     public void setSiguiente(Seccion s1, Seccion s2) {
         if (secciones.contains(s1) && secciones.contains(s2)) {
-        //dirigido
+            //dirigido
             conexiones.get(s1.getNombre()).add(s2);
 
         } else {
@@ -39,10 +39,12 @@ public class Grafo {
         }
     }
 //devuelve la lista de conexiones de la seccion
+
     public List<Seccion> obtenerVecinos(Seccion s) {
         return conexiones.get(s.getNombre());
     }
 //a modo de debug no se utiliza
+
     public void imprimiVecinos(Seccion s) {
         List<Seccion> vecinosSeccion = obtenerVecinos(s);
         System.out.println("Vecinos de " + s.getNombre() + ":");
@@ -89,51 +91,52 @@ public class Grafo {
     }
 
     public List<Seccion> getRecorridoGrafo(Seccion current) {
-    List<Seccion> recorrido = new ArrayList<>();
-    
-    while (current != null) {
-        recorrido.add(current);
-        List<Seccion> vecinos = obtenerVecinos(current);
-        
-        if (!vecinos.isEmpty()) {
-            // Utiliza el estado del semáforo para determinar el siguiente vecino
-            if (current.getSemaforo().getEstado() && vecinos.size() > 0) {
-                current = vecinos.get(0); // Asumimos que el primer vecino es el correcto cuando el semáforo está en verde
-            } else if (!current.getSemaforo().getEstado() && vecinos.size() > 1) {
-                current = vecinos.get(1); // Asumimos que el segundo vecino es el correcto cuando el semáforo está en rojo
-            } else {
-                current = null; // No hay vecinos adecuados
-            }
-        } else {
-            break;
-        }
-    }
-    return recorrido;
-}
+        List<Seccion> recorrido = new ArrayList<>();
 
-    
-    public void inicializarRecorrido(String[] bobinas){
-      
-        for(String bob : bobinas){
-            Bobina bobina = new Bobina(bob);
-            Semaforo semaforo=new Semaforo();
-            //forzar el cambio de via
-           //semaforo.setEstado(false);
-            Seccion seccion = new Seccion(bobina, semaforo);
+        while (current != null) {
+            recorrido.add(current);
+            List<Seccion> vecinos = obtenerVecinos(current);
+
+            if (!vecinos.isEmpty()) {
+                // Utiliza el estado del semáforo para determinar el siguiente vecino
+                if (current.getSemaforo().getEstado() && vecinos.size() > 0) {
+                    current = vecinos.get(0); // Asumimos que el primer vecino es el correcto cuando el semáforo está en verde
+                } else if (!current.getSemaforo().getEstado() && vecinos.size() > 1) {
+                    current = vecinos.get(1); // Asumimos que el segundo vecino es el correcto cuando el semáforo está en rojo
+                } else {
+                    current = null; // No hay vecinos adecuados
+                }
+            } else {
+                break;
+            }
+        }
+        return recorrido;
+    }
+
+    public void inicializarRecorrido(List<Bobina> bobinas) {
+        // Inicializa las secciones
+        for (Bobina bob : bobinas) {
+            Semaforo semaforo = new Semaforo();
+            Seccion seccion = new Seccion(bob, semaforo);
             agregarSeccion(seccion);
         }
-        //suponiendo que me llegan 3 bobinas
-        //si es desde la bd tengo que tener una lista de relaciones entre registros
-        //foraneas entre la misma tabla para saber como conectarlas
-        //---------------------------------------
-        /*
-            HAY QUE CREAR LOS REGISTROS EN LA TABLA BOBINAS YA SEA
-            CON UN SIGUIENTE , SIGUIENTE2 Y ANTERIOR
-        */
-        //----------------------------------
-        setSiguiente(secciones.get(0),secciones.get(1));
-        secciones.get(0).getSemaforo().setEstado(true);
-        setSiguiente(secciones.get(0),secciones.get(2));
-        setSiguiente(secciones.get(1),secciones.get(2));
+
+        // Conecta las secciones // es lo mismo recorrer secciones o bobinas 
+        for (Bobina bob : bobinas) {
+            Seccion seccionActual = getSeccion(bob.getNombre());
+            if (seccionActual != null) {
+                Seccion siguiente1 = bob.getSiguiente1() != null ? getSeccion(bob.getSiguiente1().getNombre()) : null;
+                Seccion siguiente2 = bob.getSiguiente2() != null ? getSeccion(bob.getSiguiente2().getNombre()) : null;
+                
+                // Conectar siempre, independientemente del estado del semáforo
+                if (siguiente1 != null) {
+                    setSiguiente(seccionActual, siguiente1);
+                }
+                
+                if (siguiente2 != null) {
+                    setSiguiente(seccionActual, siguiente2);
+                }
+            }
+        }
     }
 }

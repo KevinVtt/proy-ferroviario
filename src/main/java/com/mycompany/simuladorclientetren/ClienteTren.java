@@ -1,12 +1,21 @@
 package com.mycompany.simuladorclientetren;
 
+import java.lang.reflect.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import grafo.Bobina;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import utils.RespuestaBobinas;
 
 public class ClienteTren implements Runnable {
 
@@ -31,31 +40,25 @@ public class ClienteTren implements Runnable {
             sc = new Socket(HOST, PUERTO);
             in = new DataInputStream(sc.getInputStream());
             out = new DataOutputStream(sc.getOutputStream());
+
             if (sc.isConnected()) {
                 out.writeUTF("tren");
             }
 
             while (!sc.isClosed()) {
-                // out.writeUTF("tren");
-
                 String mensaje = in.readUTF();
                 System.out.println("Respuesta del servidor: " + mensaje);
-                if (mensaje.contains("Bobinas del recorrido")) {
-                    procesarRespuesta(mensaje);
-                }
 
+                // Procesar la respuesta según el formato del mensaje
+                procesarRespuesta(mensaje);
             }
-            
-            
+
         } catch (SocketException se) {
             System.out.println("Socket cerrado");
             iniciarSinConexion();
-            
-             
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }
 
     public void cerrarConexion() {
@@ -77,7 +80,7 @@ public class ClienteTren implements Runnable {
         System.out.println("recorrido --> " + recorrido);
         System.out.println("cambiamos de bobina a la numero --> " + identificadorBobina);
         System.out.println("modelo del tren --> " + numTren);
-//recorrido-identificador-NumTren <--- formato de mensaje
+        //recorrido-identificador-NumTren <--- formato de mensaje
         try {
             if (sc != null && !sc.isClosed()) {
                 out.writeUTF("recorrido-" + recorrido + "/identificador-" + identificadorBobina + "/tren-" + numTren);
@@ -89,23 +92,50 @@ public class ClienteTren implements Runnable {
     }
 
     public void procesarRespuesta(String mensaje) {
-        //esta info no la estoy guardando.. posible data class 
-
-//Respuesta del servidor: /tren diesel-45/Bobinas del recorrido constitucion-ezeiza: aux1,aux2,PT7,PT8,233T,223AT,219AT
-        String nSerie = mensaje.split("/")[1].split(" ")[1];
-        System.out.println("numero serie: " + nSerie);
-        String bobinasPart = mensaje.split(":")[1].trim();
-        // Dividir las bobinas en un array
-        String[] bobinas = bobinasPart.split(",");
-        //quitamos espacios
-        for (String bobina : bobinas) {
-            System.out.println("Bobina: " + bobina.trim());
-
+        Gson gson = new GsonBuilder().create();
+        String numeroSerie = "";
+        // Verifica si el mensaje empieza con "/tren"
+        if (mensaje.startsWith("/tren")) {
+            // Maneja el mensaje del tren (número de serie)
+            numeroSerie = mensaje.split(" ")[1];
+            System.out.println("Número de serie del tren: " + numeroSerie);
+            return;
         }
-        if (mensaje.contains("constitucion-ezeiza")) {
-            main.initJuego(nSerie, bobinas, properties.getProperty("ruta.recorrido1"));
-        } else if (mensaje.contains("constitucion-korn")) {
-            main.initJuego(nSerie, bobinas, properties.getProperty("ruta.recorrido1"));
+
+        // Verifica si el mensaje parece ser un JSON
+        if (mensaje.startsWith("{") && mensaje.endsWith("}")) {
+            // Intenta deserializar el JSON
+            Type mapType = new TypeToken<RespuestaBobinas>() {
+            }.getType();
+            RespuestaBobinas respuesta = gson.fromJson(mensaje, mapType);
+
+            if (respuesta != null) {
+                String recorrido = respuesta.getRecorrido();
+                Map<String, Bobina> bobinasMap = respuesta.getBobinas();
+
+                // Imprimir el tamaño del mapa
+                System.out.println("Número de bobinas deserializadas: " + bobinasMap.size());
+
+                // Procesar la respuesta
+                List<Bobina> bobinas = new ArrayList<>(bobinasMap.values());
+                for (Bobina b : bobinas) {
+                    System.out.println("Nombre bobina: " + b.getNombre());
+                    System.out.println("Anterior: " + b.getAnterior());
+                    System.out.println("Siguiente1: " + b.getSiguiente1());
+                    System.out.println("Siguiente2: " + b.getSiguiente2());
+                }
+
+                // Inicializa el juego (comentado, ajustar según sea necesario)
+                if (mensaje.contains("constitucion-ezeiza")) {
+                    main.initJuego(numeroSerie, bobinas, properties.getProperty("ruta.recorrido1"));
+                } else if (mensaje.contains("constitucion-korn")) {
+                    main.initJuego(numeroSerie, bobinas, properties.getProperty("ruta.recorrido1"));
+                }
+            } else {
+                System.out.println("No se deserializó correctamente el JSON.");
+            }
+        } else {
+            System.out.println("Mensaje no es del formato esperado para procesamiento: " + mensaje);
         }
     }
 
@@ -113,26 +143,38 @@ public class ClienteTren implements Runnable {
         try {
             if (sc != null && !sc.isClosed()) {
                 out.writeUTF(texto);
-               
+
             }
         } catch (IOException e) {
 
             e.printStackTrace();
         }
     }
-    
-    public void iniciarSinConexion(){
-        String[] bobinasPrueba={"PT8","aux1","aux2","PT7"};
-        String nSeriePrueba="tren sin conexcion";
-        main.initJuego(nSeriePrueba, bobinasPrueba, properties.getProperty("ruta.recorrido1"));
-            
+
+    public void iniciarSinConexion() {
+        String[] bobinaString = {"PT8", "aux1", "aux2", "PT7"};
+        List<Bobina>bobinasPrueba=new ArrayList();
+        for(String s:bobinaString){
+            bobinasPrueba.add(new Bobina(s));
+        }
+        
+        //pasarlas ya con sus siguientes asi arma las conexiones
+        bobinasPrueba.get(0).setSiguiente1(bobinasPrueba.get(1));
+        bobinasPrueba.get(1).setSiguiente1(bobinasPrueba.get(2));
+        bobinasPrueba.get(1).setSiguiente2(bobinasPrueba.get(3));
+        
+        
+        
+        String nSeriePrueba = "tren sin conexcion";
+         main.initJuego(nSeriePrueba, bobinasPrueba, properties.getProperty("ruta.recorrido1"));
+
     }
- 
+
     public void leerConfig() {
         this.properties = new Properties();
 
         try {
-            FileInputStream fis= new FileInputStream("./src/main/resources/config.properties");
+            FileInputStream fis = new FileInputStream("./src/main/resources/config.properties");
             properties.load(fis);
             fis.close();
         } catch (IOException ex) {

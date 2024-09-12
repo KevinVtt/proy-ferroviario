@@ -1,13 +1,19 @@
 package com.mycompany.simuladorclientetren;
 
+import grafo.Bobina;
 import grafo.Grafo;
 import grafo.Seccion;
 import grafo.Semaforo;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import ui.Ui;
 import javax.swing.*;
-import java.awt.*;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
 
 public class Canvas extends JPanel implements MediadorCanvas, Runnable {
 
@@ -18,10 +24,10 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
     private Grafo grafo;
     private int currentBobinaAux = 0;
     private Ui ui;
-    private String[] bobinas;
+    private List<Bobina> bobinas;
 
-    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido, String[] bobinas, String nSerie) {
-        this.bobinas = bobinas;
+    public Canvas(int w, int h, ClienteTren ct, String pathRecorrido,List<Bobina> bobinas, String nSerie) {
+        this.bobinas=bobinas;
         grafo = Grafo.getInstancia();
         grafo.inicializarRecorrido(bobinas);
         tren = new Tren(pathRecorrido);
@@ -85,7 +91,7 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
         int aux = tren.getNombreBobina();
         if (currentBobinaAux != aux) {
             currentBobinaAux = aux;
-            String currentBobina = this.bobinas[currentBobinaAux];
+            String currentBobina = this.bobinas.get(currentBobinaAux).getNombre();
             ct.cambioBobina(tren.getRecorrido(), currentBobina, tren.getNSerie());
         }
     }
