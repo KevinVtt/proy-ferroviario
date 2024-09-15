@@ -30,6 +30,7 @@ public class Tren {
     private int nombreBobina;
 
     private BufferedImage cabina, cabina2;
+    private boolean cabinaVisible=true;
     private BufferedImage currentImage;
     private Timer timer;
     private int delay = INITIAL_DELAY;
@@ -43,17 +44,18 @@ public class Tren {
 
     private Seccion currentSeccion;
     private Semaforo semaforo;
-
-    public Tren(String path) {
+    private ClienteTren ct;
+    public Tren(String path,ClienteTren ct) {
+        this.ct=ct;
         //para la imagenes de la cabina por ahora
         leerConfig();
         nombreBobina = 0;
-        nSerie = "thoshiba234";
+        setNSerie("thoshiba234");
         int ultimoSeparador = path.lastIndexOf("/");
         nombreRecorrido = path.substring(ultimoSeparador + 1);
         nombreBobina = 0;
         pathRecorrido = path;
-        this.loader = new ImageLoader();
+        this.loader = new ImageLoader(this);
         loader.loadPath(pathRecorrido);
         //cargamos la primer imagen para que no se vea vacio(peligrooo)
         try {
@@ -108,7 +110,9 @@ public class Tren {
         g.setColor(Color.red);
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("currentImg " + currentImage, 10, 10);
-        drawCabina(g, w, h);
+        if(cabinaVisible){
+            drawCabina(g, w, h);
+        }
         int textX = screenSize.width / 10 + 200;
         int textY = screenSize.height / 2 + 100;
         g.setColor(Color.GREEN);
@@ -249,7 +253,15 @@ public class Tren {
     public void actualizaCurrentSeccion(){
         setCurrentSeccion(loader.getCurrentSeccion());
     }
-
+    public void setVisibleCabina(boolean value){
+        this.cabinaVisible=value;
+    }
+    public boolean getVisibleCabina(){
+        return cabinaVisible;
+    }
+    public void avisarCambioBobina(String bobina){
+        ct.cambioBobina(getRecorrido(), bobina, getNSerie());
+    }
     //cambiar a tren la logica de deteccion de los semaforos utilizando a canvas
     //como mediador asi reducir el acoplamiento y
     //eliminar la instancia de canvas en tren y imageLoader

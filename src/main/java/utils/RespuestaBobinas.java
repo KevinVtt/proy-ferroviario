@@ -6,19 +6,36 @@ import java.util.Map;
 
 public class RespuestaBobinas {
 
+    @SerializedName("tipoMensaje")
+    private String tipoMensaje;
+    
     @SerializedName("recorrido")
     private String recorrido;
 
     @SerializedName("bobinas")
     private Map<String, Bobina> bobinas;
+    
+    
 
     // Constructor
-    public RespuestaBobinas(String recorrido, Map<String, Bobina> bobinas) {
+    public RespuestaBobinas(String tipoMensaje,String recorrido, Map<String, Bobina> bobinas) {
+        this.tipoMensaje=tipoMensaje;
         this.recorrido = recorrido;
         this.bobinas = bobinas;
     }
 
     // Getters and Setters
+
+    public String getTipoMensaje() {
+        return tipoMensaje;
+    }
+
+    public void setTipoMensaje(String tipoMensaje) {
+        this.tipoMensaje = tipoMensaje;
+    }
+    
+    
+    
     public String getRecorrido() {
         return recorrido;
     }
@@ -35,3 +52,4 @@ public class RespuestaBobinas {
         this.bobinas = bobinas;
     }
 }
+

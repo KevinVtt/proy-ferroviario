@@ -30,7 +30,7 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
         this.bobinas=bobinas;
         grafo = Grafo.getInstancia();
         grafo.inicializarRecorrido(bobinas);
-        tren = new Tren(pathRecorrido);
+        tren = new Tren(pathRecorrido,ct);
         tren.setNSerie(nSerie);
 
         ui = new Ui(tren.getVelocidad(), w, h);
@@ -51,6 +51,9 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
                 } // Disminuir velocidad con la tecla numérica 2
                 else if (e.getKeyCode() == KeyEvent.VK_NUMPAD2 || e.getKeyCode() == KeyEvent.VK_2) {
                     tren.disminuirVelocidad();
+                }
+                else if(e.getKeyCode()==KeyEvent.VK_NUMPAD9 || e.getKeyCode() == KeyEvent.VK_9){
+                    tren.setVisibleCabina(!tren.getVisibleCabina());
                 }
             }
 

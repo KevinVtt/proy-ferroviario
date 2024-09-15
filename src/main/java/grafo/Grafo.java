@@ -120,6 +120,9 @@ public class Grafo {
             Seccion seccion = new Seccion(bob, semaforo);
             agregarSeccion(seccion);
         }
+        
+        //cambiar el estado manualmente para ver el semaforo
+        //secciones.get(0).getSemaforo().setEstado(false);
 
         // Conecta las secciones // es lo mismo recorrer secciones o bobinas 
         for (Bobina bob : bobinas) {

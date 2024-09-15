@@ -26,7 +26,9 @@ public class ImageLoader{
     private Grafo mapaGrafo;
     private Map<String, Integer> imagenesPorCarpeta;
     private Map<String, File> carpetaPorSeccion;
-    public ImageLoader() {
+    private Tren tren;
+    public ImageLoader(Tren tren) {
+        this.tren=tren;
         mapaGrafo = Grafo.getInstancia();
         imagenesPorCarpeta = new HashMap<>();
         IMAGE_QUEUE = new LinkedBlockingQueue<>();
@@ -129,7 +131,7 @@ public class ImageLoader{
         this.currentSeccion = currentSeccion;
         setCurrentSemaforo(this.currentSeccion);
         System.out.println("cambio de carpeta a -->" + currentSeccion.getNombre());
-       
+       tren.avisarCambioBobina(currentSeccion.getNombre());
     }
 
     public Seccion getCurrentSeccion() {

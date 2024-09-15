@@ -20,8 +20,8 @@ public class Menu extends JPanel {
 
     private int w, h;
 
-    JButton play;
-    JButton flor;
+    JButton constitucionEzeiza;
+    JButton kornGuernica;
     BufferedImage background;
     Properties properties;
     Main main;
@@ -34,21 +34,21 @@ public class Menu extends JPanel {
         this.h = h;
         this.main = main;
         this.ct = ct;
-        play = new JButton("constitucion-ezeiza");
-        play.setBackground(new Color(60, 60, 60));
-        play.setForeground(Color.WHITE);
-        play.setFont(font);
-        play.setBorderPainted(false);
-        play.setFocusPainted(false);
-        play.setContentAreaFilled(true);
+        constitucionEzeiza = new JButton("constitucion-ezeiza");
+        constitucionEzeiza.setBackground(new Color(60, 60, 60));
+        constitucionEzeiza.setForeground(Color.WHITE);
+        constitucionEzeiza.setFont(font);
+        constitucionEzeiza.setBorderPainted(false);
+        constitucionEzeiza.setFocusPainted(false);
+        constitucionEzeiza.setContentAreaFilled(true);
 
-        flor = new JButton("constitucion-korn");
-        flor.setBackground(new Color(60, 60, 60));  // Cambia el color de fondo
-        flor.setForeground(Color.WHITE);
-        flor.setFont(font);
-        flor.setBorderPainted(false);    // Quita el borde pintado
-        flor.setFocusPainted(false);     // Quita el efecto de foco
-        flor.setContentAreaFilled(true);
+        kornGuernica = new JButton("A.Korn-a-Guernica");
+        kornGuernica.setBackground(new Color(60, 60, 60));  // Cambia el color de fondo
+        kornGuernica.setForeground(Color.WHITE);
+        kornGuernica.setFont(font);
+        kornGuernica.setBorderPainted(false);    // Quita el borde pintado
+        kornGuernica.setFocusPainted(false);     // Quita el efecto de foco
+        kornGuernica.setContentAreaFilled(true);
 
         try {
             background = ImageIO.read(new File(properties.getProperty("cabinaDefault")));
@@ -60,10 +60,10 @@ public class Menu extends JPanel {
         //para poder posicionar manualmente los componentes
         setLayout(null);
 
-        add(play);
-        add(flor);
-        play.setBounds((int) w / 10, (int) h / 4, 200, 50);
-        flor.setBounds((int) w / 10, (int) h / 4 + 70, 200, 50);
+        add(constitucionEzeiza);
+        add(kornGuernica);
+        constitucionEzeiza.setBounds((int) w / 10, (int) h / 4, 200, 50);
+        kornGuernica.setBounds((int) w / 10, (int) h / 4 + 70, 200, 50);
 
         initListener();
     }
@@ -77,10 +77,10 @@ public class Menu extends JPanel {
     }
 
     public void initListener() {
-        listenerAction(play);
-        listenerMouse(play);
-        listenerAction(flor);
-        listenerMouse(flor);
+        listenerAction(constitucionEzeiza);
+        listenerMouse(constitucionEzeiza);
+        listenerAction(kornGuernica);
+        listenerMouse(kornGuernica);
     }
     public void listenerAction(JButton boton) {
         boton.addActionListener(new ActionListener() {
