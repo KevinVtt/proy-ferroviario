@@ -19,7 +19,7 @@ import java.util.Properties;
 
 public class Tren {
 
-    private static final int INITIAL_DELAY = 1000;
+    private static final int INITIAL_DELAY = 0;
 
     private Properties properties;
     private int velocidad;
@@ -45,6 +45,7 @@ public class Tren {
     private Seccion currentSeccion;
     private Semaforo semaforo;
     private ClienteTren ct;
+    
     public Tren(String path,ClienteTren ct) {
         this.ct=ct;
         //para la imagenes de la cabina por ahora
@@ -96,7 +97,7 @@ public class Tren {
 
     public void setTimerSpeed() {
         if (velocidad > 0) {
-            delay = Math.max(9000 / velocidad, 90);
+            delay = Math.max(1 / velocidad, 20);
             timer.setDelay(delay);
         } else {
             stopTimer();

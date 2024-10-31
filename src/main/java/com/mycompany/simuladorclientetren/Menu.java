@@ -82,6 +82,7 @@ public class Menu extends JPanel {
         listenerAction(kornGuernica);
         listenerMouse(kornGuernica);
     }
+    
     public void listenerAction(JButton boton) {
         boton.addActionListener(new ActionListener() {
             @Override

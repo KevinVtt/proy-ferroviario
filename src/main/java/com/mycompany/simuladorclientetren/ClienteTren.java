@@ -162,16 +162,16 @@ public class ClienteTren implements Runnable {
     }
 
     public void iniciarSinConexion() {
-        String[] bobinaString = {"PT8", "aux1", "aux2", "PT7"};
+        String[] bobinaString = {"aux1", "aux2","PT7"};
         List<Bobina> bobinasPrueba = new ArrayList();
         for (String s : bobinaString) {
             bobinasPrueba.add(new Bobina(s));
         }
-
+           
         //pasarlas ya con sus siguientes asi arma las conexiones
         bobinasPrueba.get(0).setSiguiente1(bobinasPrueba.get(1));
         bobinasPrueba.get(1).setSiguiente1(bobinasPrueba.get(2));
-        bobinasPrueba.get(1).setSiguiente2(bobinasPrueba.get(3));
+//        bobinasPrueba.get(1).setSiguiente2(bobinasPrueba.get(3));
 
         String nSeriePrueba = "tren sin conexcion";
         main.initJuego(nSeriePrueba, bobinasPrueba, properties.getProperty("ruta.recorrido1"));

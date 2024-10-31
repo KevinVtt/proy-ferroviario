@@ -12,7 +12,7 @@ public class Main extends JFrame {
     ClienteTren ct;
     int width=1024;
     int height=768;
-    
+
     public Main(){
         setTitle("Simulador Ferroviario");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,6 +58,7 @@ public class Main extends JFrame {
 //Respuesta del servidor: Bobinas del recorrido constitucion-ezeiza: aux1, aux2, PT7, PT8, 233T, 223AT, 219AT
     void initJuego(String tren,List<Bobina> bobinas,String pathRecorrido) {
         panel=new Canvas(width,height,ct,pathRecorrido,bobinas,tren);
+        System.out.println("w: " + width + " h " + height);
         this.add(panel);
         this.remove(menu);
         revalidate();

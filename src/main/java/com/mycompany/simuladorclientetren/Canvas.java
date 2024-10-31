@@ -25,6 +25,7 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
     private int currentBobinaAux = 0;
     private Ui ui;
     private List<Bobina> bobinas;
+    private TrenPrueba trenPrueba;
 
     public Canvas(int w, int h, ClienteTren ct, String pathRecorrido,List<Bobina> bobinas, String nSerie) {
         this.bobinas=bobinas;
@@ -32,7 +33,7 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
         grafo.inicializarRecorrido(bobinas);
         tren = new Tren(pathRecorrido,ct);
         tren.setNSerie(nSerie);
-
+        trenPrueba = new TrenPrueba(0, 0, w, h, tren);
         ui = new Ui(tren.getVelocidad(), w, h);
         setLayout(new BorderLayout());
         add(ui, BorderLayout.CENTER);
@@ -77,12 +78,14 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         tren.paint(g, getWidth(), getHeight());
-
+        trenPrueba.paint(g);
         ui.paint(g);
         renderFPS(g);
     }
+    
+    
 
     private void renderFPS(Graphics g) {
         g.setColor(Color.WHITE);
@@ -130,6 +133,7 @@ public class Canvas extends JPanel implements MediadorCanvas, Runnable {
             //updates------------------------
             verificarBobina();
             actualizarDatosTren();
+            trenPrueba.actualiza();
             //--------------------------------
             repaint();
             long currentTime = System.currentTimeMillis() - startTime;
